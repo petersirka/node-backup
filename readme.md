@@ -11,6 +11,18 @@ Easy Backup & Restore web site project. All files and directories are written to
 - easy use in your project
 - executables *backup* and *restore* from terminal
 
+## Installation
+
+```js
+
+$ sudo npm install -g backup
+
+// or
+
+$ npm install backup
+
+```
+
 ## node.js
 
 ```js
