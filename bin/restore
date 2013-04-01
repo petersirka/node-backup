@@ -2,4 +2,14 @@
 
 var backup = require('backup');
 
-console.log('IN DEVELOPMENT');
+if (process.argv.length !== 4) {
+	console.log('ERROR: You must specify a filename for write backup.');
+	return;
+}
+
+var fileName = process.argv[2];
+var dir = process.argv[3];
+
+backup.restore(fileName, dir, function() {
+	console.log('Restore complete.');
+});

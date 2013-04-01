@@ -29,6 +29,8 @@ function Backup() {
 	this.path = '';
 	this.fileName = '';
 
+	this.read = { key: '', value: '', status: 0 };
+
 	this.complete = function() {};
 	this.filter = function(path) {
 		return true;
@@ -169,6 +171,135 @@ Backup.prototype.$compress = function() {
 	});
 };
 
+Backup.prototype.restoreKey = function(data) {
+
+	var self = this;
+	var read = self.read;
+
+	if (read.status === 1) {
+		self.restoreValue(data);
+		return;
+	}
+
+	var index = data.indexOf(':');
+
+	if (index === -1) {
+		read.key += data;
+		return;
+	}
+
+	read.status = 1;
+	read.key = data.substring(0, index);
+	self.restoreValue(data.substring(index + 1));
+};
+
+Backup.prototype.restoreValue = function(data) {
+
+	var self = this;
+	var read = self.read;
+
+	if (read.status !== 1) {
+		self.restoreKey(data);
+		return;
+	}
+
+	var index = data.indexOf('\n');
+	if (index === -1) {
+		read.value += data;
+		return;
+	}
+
+	read.value += data.substring(0, index);
+
+	self.restoreFile(read.key.replace(/\s/g, ''), read.value.replace(/\s/g, ''));
+
+	read.status = 0;
+	read.value = '';
+	read.key = '';
+
+	self.restoreKey(data.substring(index + 1));
+};
+
+Backup.prototype.restore = function(fileName, path, callback, filter) {
+
+	if (!fs.existsSync(fileName)) {
+		callback();
+		return;
+	}
+
+	var self = this;
+	self.createDirectory(path, true);
+
+	var stream = fs.createReadStream(fileName);	
+	var key = '';
+	var value = '';
+	var status = 0;
+
+	self.path = path;
+
+	stream.on('data', function(buffer) {
+
+		var data = buffer.toString('utf8');
+		self.restoreKey(data);
+
+	});
+
+	stream.resume(10000);
+};
+
+Backup.prototype.restoreFile = function(key, value) {
+	var self = this;
+
+	if (!self.filter(key))
+		return;
+
+	if (value === '#') {
+		self.createDirectory(key);
+		return;
+	}
+
+	var path = key;
+	var index = key.lastIndexOf('/');
+
+	if (index !== -1) {
+		path = key.substring(0, index).trim();
+		if (path.length > 0)
+			self.createDirectory(path);
+	}
+
+	zlib.gunzip(new Buffer(value, 'base64'), function(err, data) {
+		fs.writeFileSync(ph.join(self.path, key), data);
+	});
+};
+
+Backup.prototype.createDirectory = function(path, root) {
+
+	if (path[0] === '/')
+		path = path.substring(1);
+
+	if (path[path.length - 1] === '/')
+		path = path.substring(0, path.length - 1);
+
+	var arr = path.split('/');
+	var directory = '';
+	var self = this;
+
+	arr.forEach(function(name) {
+
+		directory += (directory.length > 0 ? '/' : '') + name;
+
+		var dir = ph.join(self.path, directory);
+
+		if (root)
+			dir = '/' + dir;
+
+		if (fs.existsSync(dir))
+			return;
+
+		fs.mkdirSync(dir);
+	});
+};
+
 /*
 	@max {Number}
 	@c {String} :: optional
@@ -189,8 +320,12 @@ String.prototype.padRight = function(max, c) {
 	return self + Array(Math.max(0, max - self.length + 1)).join(c || ' ');
 };
 
+String.prototype.trim = function() {
+	return this.replace(/^[\s]+|[\s]+$/g, '');
+};
+
 // ===========================================================================
-// EXPORST
+// EXPORTS
 // ===========================================================================
 
 exports.backup = function(path, fileName, callback, filter) {
@@ -200,5 +335,5 @@ exports.backup = function(path, fileName, callback, filter) {
 
 exports.restore = function(fileName, path, callback, filter) {
 	var backup = new Backup();
-	console.log('NOT IMPLEMENTED');
+	backup.restore(fileName, path, callback, filter);	
 };
