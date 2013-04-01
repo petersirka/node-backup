@@ -1,7 +1,48 @@
-node backup
-===========
+node.js Backup & Restore
+========================
 
-> IN DEVELOPMENT
+Easy Backup & Restore web site project. All files and directories are written to one file (and files are compressed via GZIPPED).
+
+## node.js
+
+```js
+var backup = require('backup');
+
+/*
+	Backup directory to file
+	
+	@directory {String}
+	@filename {String},
+	@complete {Function} :: optional
+	@filter {Function} :: optional, param @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+*/
+backup.backup('/path/to/directory/', '/users/petersirka/desktop/website.backup');
+
+/*
+	Restore from file
+
+	@filename {String},
+	@directory {String}
+	@complete {Function} :: optional
+	@filter {Function} :: optional, param @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+*/
+backup.restore('/users/petersirka/desktop/website.backup', '/path/to/directory/');
+
+```
+
+## BINARY
+
+```
+
+// backup current directory
+// $ backup @filename
+$ backup /users/petersirka/desktop/website.backup
+
+// restore backup file
+// $ restore @filename @path
+$ restore /users/petersirka/desktop/website.backup /users/petersirka/desktop/
+
+```
 
 
 ## The MIT License
