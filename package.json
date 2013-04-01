@@ -1,0 +1,26 @@
+{
+    "name": "backup",
+    "version": "1.0.0-1",
+    "description": "Web Site backup & restore",
+    "main": "./index.js",
+    "keywords": [ "backup", "restore"],
+    "engines": {
+        "node": ">=0.6.0"
+    },
+    "readmeFilename": "readme.md",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/petersirka/backup.git"
+    },
+    "author": {
+        "name": "Peter Širka"
+    },
+    "bin": { "partial.js": "./bin/partial" },
+    "_from": "partial.js",
+    "directories": {
+        "test": "test"
+    }
+}
