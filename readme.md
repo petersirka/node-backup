@@ -1,7 +1,7 @@
 node.js Backup & Restore
 ========================
 
-Easy Backup & Restore web site project. All files and directories are written to one file (and files are compressed via GZIPPED).
+Easy Backup & Restore web site project. All files and directories are written to one file (and files are compressed via GZIP).
 
 ## node.js
 
