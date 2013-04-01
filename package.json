@@ -13,14 +13,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/petersirka/backup.git"
+        "url": "https://github.com/petersirka/node-backup.git"
     },
     "author": {
         "name": "Peter Širka"
     },
-    "bin": { "partial.js": "./bin/partial" },
-    "_from": "partial.js",
-    "directories": {
-        "test": "test"
+    "bin": {
+        "backup": "./bin/backup",
+        "restore": "./bin/restore"
     }
 }
