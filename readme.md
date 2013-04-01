@@ -3,6 +3,12 @@ node.js Backup & Restore
 
 Easy Backup & Restore web site project. All files and directories are written to one file (and files are compressed via GZIP).
 
+- backup file is text file
+- simple structure
+- easy manipulation
+- easy use in your project
+- executables _backup_ and _restore_ from terminal
+
 ## node.js
 
 ```js
