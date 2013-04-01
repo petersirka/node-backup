@@ -197,3 +197,8 @@ exports.backup = function(path, fileName, callback, filter) {
 	var backup = new Backup();
 	backup.backup(path, fileName, callback, filter);
 };
+
+exports.restore = function(fileName, path, callback, filter) {
+	var backup = new Backup();
+	console.log('NOT IMPLEMENTED');
+};
