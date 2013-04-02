@@ -222,7 +222,8 @@ Backup.prototype.restoreValue = function(data) {
 Backup.prototype.restore = function(fileName, path, callback, filter) {
 
 	if (!fs.existsSync(fileName)) {
-		callback(new Error('Backup file not found.'), path);
+		if (callback)
+			callback(new Error('Backup file not found.'), path);
 		return;
 	}
 
@@ -243,9 +244,11 @@ Backup.prototype.restore = function(fileName, path, callback, filter) {
 
 	});
 
-	stream.on('end', function() {
-		callback(null, path);
-	});
+	if (callback) {
+		stream.on('end', function() {
+			callback(null, path);
+		});
+	}
 
 	stream.resume();
 };
