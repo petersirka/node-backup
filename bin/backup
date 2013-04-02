@@ -10,6 +10,17 @@ if (process.argv.length !== 3) {
 var dir = process.cwd();
 var fileName = process.argv[2];
 
-backup.backup(dir, fileName, function() {
-	console.log('Backup complete.');
-});
+var fn = function(path) {
+	return path.indexOf('.DS_Store') === -1;
+};
+
+backup.backup(dir, fileName, function(err, path) {
+
+	if (err) {
+		console.log(err);
+		return;
+	}
+
+	console.log('Backup complete: ' + path);
+
+}, fn);
