@@ -102,7 +102,6 @@ Walker.prototype.next = function() {
 	self.complete(self.directory, self.file);
 };
 
-
 Backup.prototype.backup = function(path, fileName, callback, filter) {
 
 	if (fs.existsSync(fileName))
@@ -146,7 +145,7 @@ Backup.prototype.$compress = function() {
 	var fileName = self.file.shift();
 
 	if (typeof(fileName) === 'undefined') {
-		self.complete();
+		self.complete(null, self.fileName);
 		return;
 	}
 
@@ -223,7 +222,7 @@ Backup.prototype.restoreValue = function(data) {
 Backup.prototype.restore = function(fileName, path, callback, filter) {
 
 	if (!fs.existsSync(fileName)) {
-		callback();
+		callback(new Error('Backup file not found.'), path);
 		return;
 	}
 
@@ -244,7 +243,11 @@ Backup.prototype.restore = function(fileName, path, callback, filter) {
 
 	});
 
-	stream.resume(10000);
+	stream.on('end', function() {
+		callback(null, path);
+	});
+
+	stream.resume();
 };
 
 Backup.prototype.restoreFile = function(key, value) {
@@ -337,3 +340,5 @@ exports.restore = function(fileName, path, callback, filter) {
 	var backup = new Backup();
 	backup.restore(fileName, path, callback, filter);	
 };
+
+exports.Backup = Backup;
