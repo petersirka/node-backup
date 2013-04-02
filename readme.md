@@ -33,7 +33,7 @@ var backup = require('backup');
 	@directory {String}
 	@filename {String},
 	@complete {Function} :: optional, param: @err {Error}, @filename {String}
-	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will be skipped
 */
 backup.backup('/path/to/directory/', '/users/petersirka/desktop/website.backup');
 
@@ -43,7 +43,7 @@ backup.backup('/path/to/directory/', '/users/petersirka/desktop/website.backup')
 	@filename {String},
 	@directory {String}
 	@complete {Function} :: optional, param: @err {Error}, @path {String}
-	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will be skipped
 */
 backup.restore('/users/petersirka/desktop/website.backup', '/path/to/directory/');
 ```
