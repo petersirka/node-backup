@@ -3,24 +3,23 @@ node.js Backup & Restore
 
 Easy Backup & Restore web site project. All files and directories are written to one file (and files are compressed via GZIP).
 
-- backup file is text file
-- supports backup and restore: files and directories
-- simple filtering files and directories
-- simple structure
-- easy manipulation
-- easy use in your project
-- executables *backup* and *restore* from terminal
+* Backup file is text file
+* Supports backup and restore: files and directories
+* Simple filtering files and directories
+* Simple structure
+* Easy manipulation
+* Easy use in your project
+* Executables *backup* and *restore* from terminal
+* __No dependencies__
 
 ## Installation
 
-```js
-
+```
 $ sudo npm install -g backup
 
 // or
 
 $ npm install backup
-
 ```
 
 ## node.js
@@ -34,7 +33,7 @@ var backup = require('backup');
 	@directory {String}
 	@filename {String},
 	@complete {Function} :: optional
-	@filter {Function} :: optional, param @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
 */
 backup.backup('/path/to/directory/', '/users/petersirka/desktop/website.backup');
 
@@ -43,17 +42,15 @@ backup.backup('/path/to/directory/', '/users/petersirka/desktop/website.backup')
 
 	@filename {String},
 	@directory {String}
-	@complete {Function} :: optional
-	@filter {Function} :: optional, param @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
+	@complete {Function} :: optional, param: @err 
+	@filter {Function} :: optional, param: @path {String} return TRUE | FALSE, if FALSE file or directory will skipped
 */
 backup.restore('/users/petersirka/desktop/website.backup', '/path/to/directory/');
-
 ```
 
 ## BINARY
 
 ```
-
 // backup current directory
 // $ backup @filename
 $ backup /users/petersirka/desktop/website.backup
@@ -61,9 +58,7 @@ $ backup /users/petersirka/desktop/website.backup
 // restore backup file
 // $ restore @filename @path
 $ restore /users/petersirka/desktop/website.backup /users/petersirka/desktop/
-
 ```
-
 
 ## The MIT License
 
@@ -74,6 +69,10 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Recommend
+
+[partial.js web application framework](https://github.com/petersirka/partial.js)
 
 ## Contact
 
