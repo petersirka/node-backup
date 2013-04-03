@@ -7,7 +7,7 @@ if (process.argv.length !== 3) {
 	return;
 }
 
-var dir = process.cwd();
+var dir = process.argv[3] || process.cwd();
 var fileName = process.argv[2];
 
 var fn = function(path) {

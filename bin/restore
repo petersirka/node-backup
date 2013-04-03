@@ -2,13 +2,13 @@
 
 var backup = require('backup');
 
-if (process.argv.length !== 4) {
-	console.log('ERROR: You must specify a filename for write backup.');
+if (process.argv.length < 3) {
+	console.log('ERROR: You must specify a backup file and restore path.');
 	return;
 }
 
 var fileName = process.argv[2];
-var dir = process.argv[3];
+var dir = process.argv[3] || process.cwd();
 
 backup.restore(fileName, dir, function(err, path) {
 
