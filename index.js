@@ -22,6 +22,7 @@
 var fs = require('fs');
 var ph = require('path');
 var zlib = require('zlib');
+var padding = 120;
 
 function Backup() {
 	this.file = [];
@@ -138,7 +139,7 @@ Backup.prototype.$compress = function() {
 
 		self.directory.forEach(function(o) {
 			if (self.filter(o.substring(length)))
-				fs.appendFileSync(self.fileName, (o.replace(self.path, '') + '/').padRight(100) + ':#\n');
+				fs.appendFileSync(self.fileName, (o.replace(self.path, '').replace(/\\/g, '/') + '/').padRight(padding) + ':#\n');
 		});
 
 		self.directory = [];
@@ -164,8 +165,8 @@ Backup.prototype.$compress = function() {
 			if (err)
 				return;
 
-			var name = fileName.replace(self.path, '');
-			fs.appendFile(self.fileName, name.padRight(100) + ':' + data.toString('base64') + '\n', function(err) {
+			var name = fileName.replace(self.path, '').replace(/\\/g, '/');
+			fs.appendFile(self.fileName, name.padRight(padding) + ':' + data.toString('base64') + '\n', function(err) {
 				self.$compress();
 			});
 		});
