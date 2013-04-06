@@ -38,12 +38,13 @@ function Backup() {
 	};
 };
 
-function Walker() {
+function Walker(addDirectory) {
 	this.pending = [];
 	this.pendingDirectory = [];
 	this.directory = [];
 	this.file = [];
 	this.complete = null;
+	this.addDirectory = addDirectory || false;
 };
 
 Walker.prototype.walk = function(path) {
@@ -53,7 +54,7 @@ Walker.prototype.walk = function(path) {
 		if (err)
 			return self.next();
 
-		if (arr.length === 0)
+		if (arr.length === 0 || self.addDirectory)
 			self.directory.push(path);
 
 		arr.forEach(function(o) {
@@ -309,6 +310,82 @@ Backup.prototype.createDirectory = function(path, root) {
 	});
 };
 
+Backup.prototype.clear = function(path, callback, filter) {
+
+	var self = this;
+	var walker = new Walker(true);
+
+	if (callback)
+		self.complete = callback;
+
+	if (filter)
+		self.filter = filter;
+
+	walker.complete = function(directory, files) {
+
+		self.file = [];
+		self.directory = [];
+
+		if (typeof(filter) !== 'function')
+			filter = function(o) { return true; };
+
+		files.forEach(function(o) {
+			if (filter(o))
+				self.file.push(o);
+		});
+
+		directory.forEach(function(o) {
+
+			if (o === path)
+				return;
+
+			if (filter(o))
+				self.directory.push(o);
+		});
+
+		self.directory.sort(function(a, b) {
+			if (a.length < b.length)
+				return 1;
+			else
+				return -1;
+		});
+
+		self.removeFile();
+	};
+
+	walker.walk(path);
+};
+
+Backup.prototype.removeFile = function() {
+
+	var self = this;
+	var filename = self.file.shift();
+
+	if (typeof(filename) === 'undefined') {
+		self.removeDirectory();
+		return;
+	}
+
+	fs.unlink(filename, function() {
+		self.removeFile();
+	});
+};
+
+Backup.prototype.removeDirectory = function() {
+
+	var self = this;
+	var directory = self.directory.shift();
+
+	if (typeof(directory) === 'undefined') {
+		self.complete();
+		return;
+	}
+	
+	fs.rmdir(directory, function() {
+		self.removeDirectory();
+	});
+};
+
 /*
 	@max {Number}
 	@c {String} :: optional
@@ -342,9 +419,22 @@ exports.backup = function(path, fileName, callback, filter) {
 	backup.backup(path, fileName, callback, filter);
 };
 
-exports.restore = function(fileName, path, callback, filter) {
+exports.clear = function(path, callback, filter) {
 	var backup = new Backup();
-	backup.restore(fileName, path, callback, filter);	
+	backup.clear(path, callback, filter);
+};
+
+exports.restore = function(fileName, path, callback, filter, clear) {
+	var backup = new Backup();
+	
+	if (!clear) {
+		backup.restore(fileName, path, callback, filter);
+		return;
+	}
+
+	backup.clear(path, function() {
+		backup.restore(fileName, path, callback, filter);
+	});
 };
 
 exports.Backup = Backup;
