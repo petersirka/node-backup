@@ -1,3 +1,5 @@
+[![Backup & Restore](http://partialjs.com/exports/backup-logo.png)](https://github.com/petersirka/backup)
+
 node.js Backup & Restore
 ========================
 
